@@ -43,6 +43,8 @@ def send_email():
         server.send_message(msg)
         print("📧 报告内容：", report)
     print("✅ 邮件发送成功！")
+    report = generate_market_report()
+    print("📧 报告内容：", report)
 
 if __name__ == "__main__":
     send_email()
