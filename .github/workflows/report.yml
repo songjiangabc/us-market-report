@@ -1,0 +1,25 @@
+name: Daily Market Report
+on:
+  schedule:
+    - cron: "0 14 * * *"   # UTC 14:00 (美东9:00 AM)
+    - cron: "30 16 * * *"  # UTC 16:30 (美东11:30 AM)
+    - cron: "30 18 * * *"  # UTC 18:30 (美东1:30 PM)
+    - cron: "30 20 * * *"  # UTC 20:30 (美东3:30 PM)
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  send-report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - name: Install dependencies
+        run: |
+          pip install yfinance requests
+      - name: Run report script
+        env:
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: python daily_market_report.py
