@@ -15,9 +15,11 @@ def generate_market_report():
     now = datetime.now().strftime("%Y年%m月%d日 %H:%M")
     report = f"### 📊 美股市场综合分析报告\n**更新时间：{now}（美东时间）**\n\n"
     report += "#### 🔹 基本面\n- S&P 500 PE: ~21.3x | 10年期美债收益率: 4.25%\n- Q3盈利同比增长 +8.2%，科技/金融领涨\n\n"
+    print("✅ 正在获取 S&P 500 数据...")
     sp500 = yf.Ticker("^GSPC")
     hist = sp500.history(period="5d")
     current = hist['Close'][-1] if not hist.empty else "N/A"
+    print("✅ 正在获取新闻数据...")
     report += f"#### 🔹 技术面\n- S&P 500: {current}\n- 趋势：高位震荡\n\n"
     try:
         news = requests.get(f"https://finnhub.io/api/v1/news?category=general&token={FINNHUB_API_KEY}").json()[:3]
@@ -39,6 +41,7 @@ def send_email():
         server.starttls()
         server.login(GMAIL_ADDRESS, GMAIL_APP_PASSWORD)
         server.send_message(msg)
+        print("📧 报告内容：", report)
     print("✅ 邮件发送成功！")
 
 if __name__ == "__main__":
